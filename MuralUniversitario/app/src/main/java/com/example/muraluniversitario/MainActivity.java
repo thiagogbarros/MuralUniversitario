@@ -26,23 +26,19 @@ public class MainActivity extends AppCompatActivity {
         //mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         setContentView(R.layout.activity_main);
         text =(TextView)findViewById(R.id.text_center);
-        btn =(Button)findViewById(R.id.button);
-        btn.setOnClickListener(new View.OnClickListener() {
+        reff = FirebaseDatabase.getInstance().getReference().child("categorias");
+        reff.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onClick(View view) {
-                reff = FirebaseDatabase.getInstance().getReference().child("categorias").child("1");
-                reff.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        String nome = dataSnapshot.child("nome").getValue().toString();
-                        text.setText(nome);
-                    }
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String nome = dataSnapshot.getValue().toString();
+                    text.setText(nome);
+                }
+            }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    }
-                });
             }
         });
     }
